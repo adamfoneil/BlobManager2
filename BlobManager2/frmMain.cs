@@ -34,9 +34,9 @@ namespace BlobManager2
 
         private void FillAccounts()
         {
-            cbAccount.Items.Clear();
+            tvwObjects.Nodes.Clear();
             if (!_options.Accounts?.Any() ?? true) return;
-            cbAccount.Items.AddRange(_options.Accounts);
+            
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
