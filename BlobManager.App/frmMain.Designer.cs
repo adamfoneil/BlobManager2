@@ -188,6 +188,7 @@
             this.colSize,
             this.colContentType});
             this.lvBlobs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvBlobs.FullRowSelect = true;
             this.lvBlobs.Location = new System.Drawing.Point(0, 25);
             this.lvBlobs.Name = "lvBlobs";
             this.lvBlobs.Size = new System.Drawing.Size(542, 247);

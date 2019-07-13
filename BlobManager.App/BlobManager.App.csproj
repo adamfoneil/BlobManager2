@@ -50,6 +50,7 @@
     <Compile Include="Classes\BlobItem.cs" />
     <Compile Include="Classes\ContainerNode.cs" />
     <Compile Include="Classes\FolderItem.cs" />
+    <Compile Include="Classes\ListViewColumnSizer.cs" />
     <Compile Include="Classes\PlaceholderNode.cs" />
     <Compile Include="Forms\frmStorageAccount.cs">
       <SubType>Form</SubType>

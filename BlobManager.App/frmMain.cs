@@ -15,6 +15,8 @@ namespace BlobManager.App
     public partial class frmMain : Form
     {
         private Options _options = null;
+        private ListViewColumnSizer _columnSizer;
+
         static int searchFieldCycle = 0;
 
         public frmMain()
@@ -26,8 +28,10 @@ namespace BlobManager.App
         {
             try
             {
+                _columnSizer = new ListViewColumnSizer(lvBlobs);
                 _options = JsonSettingsBase.Load<Options>();
                 _options.FormPosition?.Apply(this);
+                
                 FillAccounts();
             }
             catch (Exception exc)
