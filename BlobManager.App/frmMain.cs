@@ -171,6 +171,7 @@ namespace BlobManager.App
                         lvBlobs.BeginUpdate();
                         lvBlobs.Items.Clear();
                         lvBlobs.Items.AddRange(results.Folders.Select(folder => new FolderItem(folder)).ToArray());
+                        lvBlobs.Items.AddRange(results.Blobs.Select(blob => new BlobItem(blob, imlSmallIcons)).ToArray());
                         lvBlobs.EndUpdate();
                     }, false);
                 }

@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\AccountNode.cs" />
+    <Compile Include="Classes\BlobItem.cs" />
     <Compile Include="Classes\ContainerNode.cs" />
     <Compile Include="Classes\FolderItem.cs" />
     <Compile Include="Classes\PlaceholderNode.cs" />
@@ -103,7 +104,7 @@
       <Version>9.3.3</Version>
     </PackageReference>
     <PackageReference Include="WinForms.Library">
-      <Version>1.0.16</Version>
+      <Version>1.0.17</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
