@@ -37,11 +37,9 @@ namespace BlobManager.App
 
         private void FillAccounts()
         {
-            tvwObjects.Nodes.Clear();            
+            tvwObjects.Nodes.Clear();
 
-            var root = tvwObjects.Nodes.Add("root", "Azure Storage Accounts");
-            root.ImageKey = "accounts.png";
-            root.SelectedImageKey = "accounts.png";
+            TreeNode root = AddRootNode();
 
             int count = _options.Accounts?.Count ?? 0;
             string text = (count != 1) ? "accounts" : "account";
@@ -52,6 +50,14 @@ namespace BlobManager.App
             foreach (var a in _options.Accounts) root.Nodes.Add(new AccountNode(a));
 
             root.Expand();
+        }
+
+        private TreeNode AddRootNode()
+        {
+            var root = tvwObjects.Nodes.Add("root", "Azure Storage Accounts");
+            root.ImageKey = "accounts.png";
+            root.SelectedImageKey = "accounts.png";
+            return root;
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -155,6 +161,7 @@ namespace BlobManager.App
                 var containerNode = e.Node as ContainerNode;
                 if (containerNode != null)
                 {
+                    tslCurrentPath.Text = containerNode.Parent.Text + " / " + containerNode.Name;
                     await DoActionAsync(tslBlobStatus, $"Listing blobs in {containerNode.Name}...", async () =>
                     {
                         var account = (containerNode.Parent as AccountNode).Account;
@@ -195,20 +202,39 @@ namespace BlobManager.App
         {
             try
             {
-                string searchText = tbSearch.Text;
-                if (searchText.Length > 2 && e.KeyCode == Keys.Enter)
+                string searchText = tbSearchContainers.Text;
+                if (e.KeyCode == Keys.Enter)
                 {
-                    tvwObjects.Nodes.Clear();
-                    foreach (var acc in _options.Accounts)
+                    if (!string.IsNullOrEmpty(searchText))
                     {
-                        var service = new BlobService(acc.Name, acc.Key);
-                        var containers = await service.ListContainersAsync(searchText);
-                        if (containers.Any())
+                        await DoActionAsync(tslAccountStatus, "Searching containers...", async () =>
                         {
+                            tvwObjects.Nodes.Clear();
+                            var root = AddRootNode();
+                            foreach (var acc in _options.Accounts)
+                            {
+                                var service = new BlobService(acc.Name, acc.Key);
+                                var containers = await service.ListContainersAsync(searchText);
+                                if (containers.Any())
+                                {
 
-                        }
+                                    var accountNode = new AccountNode(acc);
+                                    root.Nodes.Add(accountNode);
+                                    tvwObjects.BeginUpdate();
+                                    accountNode.LoadContainers(containers);
+                                    tvwObjects.EndUpdate();
+                                    accountNode.Expand();
+                                }
+                            }
+                            root.Expand();
+                        });
+                    }
+                    else
+                    {
+                        FillAccounts();
                     }
                 }
+                
             }
             catch (Exception exc)
             {
