@@ -118,9 +118,9 @@ namespace BlobManager2
                 {
                     _options.Accounts.RemoveWhere(row => row.Name.Equals(dlg.SelectedAccount.Name));
                     _options.Accounts.Add(dlg.SelectedAccount);
+                    _options.Save();
                 }
-            }
-            
+            }            
         }
     }
 }
