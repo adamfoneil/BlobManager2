@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\AccountNode.cs" />
+    <Compile Include="Classes\ContainerNode.cs" />
+    <Compile Include="Classes\PlaceholderNode.cs" />
     <Compile Include="Forms\frmStorageAccount.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,7 +64,7 @@
     <Compile Include="Models\Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\BlobManager.cs" />
+    <Compile Include="Services\BlobService.cs" />
     <EmbeddedResource Include="Forms\frmStorageAccount.resx">
       <DependentUpon>frmStorageAccount.cs</DependentUpon>
     </EmbeddedResource>

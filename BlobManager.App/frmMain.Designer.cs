@@ -35,18 +35,18 @@
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tvwObjects = new System.Windows.Forms.TreeView();
-            this.imlSmallIcons = new System.Windows.Forms.ImageList(this.components);
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.tslAccountStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.cmAccounts = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addAccountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imlSmallIcons = new System.Windows.Forms.ImageList(this.components);
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.tslAccountStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             this.cmAccounts.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -99,7 +99,31 @@
             this.tvwObjects.ShowLines = false;
             this.tvwObjects.Size = new System.Drawing.Size(228, 247);
             this.tvwObjects.TabIndex = 0;
+            this.tvwObjects.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.TvwObjects_BeforeExpand);
             this.tvwObjects.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TvwObjects_KeyDown);
+            // 
+            // cmAccounts
+            // 
+            this.cmAccounts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addAccountToolStripMenuItem,
+            this.editDetailsToolStripMenuItem});
+            this.cmAccounts.Name = "cmAccounts";
+            this.cmAccounts.Size = new System.Drawing.Size(154, 48);
+            this.cmAccounts.Opening += new System.ComponentModel.CancelEventHandler(this.CmAccounts_Opening);
+            // 
+            // addAccountToolStripMenuItem
+            // 
+            this.addAccountToolStripMenuItem.Name = "addAccountToolStripMenuItem";
+            this.addAccountToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.addAccountToolStripMenuItem.Text = "Add Account...";
+            this.addAccountToolStripMenuItem.Click += new System.EventHandler(this.AddAccountToolStripMenuItem_Click);
+            // 
+            // editDetailsToolStripMenuItem
+            // 
+            this.editDetailsToolStripMenuItem.Name = "editDetailsToolStripMenuItem";
+            this.editDetailsToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.editDetailsToolStripMenuItem.Text = "Edit Details...";
+            this.editDetailsToolStripMenuItem.Click += new System.EventHandler(this.EditDetailsToolStripMenuItem_Click);
             // 
             // imlSmallIcons
             // 
@@ -128,29 +152,6 @@
             this.tslAccountStatus.Text = "0 accounts";
             this.tslAccountStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // cmAccounts
-            // 
-            this.cmAccounts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addAccountToolStripMenuItem,
-            this.editDetailsToolStripMenuItem});
-            this.cmAccounts.Name = "cmAccounts";
-            this.cmAccounts.Size = new System.Drawing.Size(154, 48);
-            this.cmAccounts.Opening += new System.ComponentModel.CancelEventHandler(this.CmAccounts_Opening);
-            // 
-            // addAccountToolStripMenuItem
-            // 
-            this.addAccountToolStripMenuItem.Name = "addAccountToolStripMenuItem";
-            this.addAccountToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
-            this.addAccountToolStripMenuItem.Text = "Add Account...";
-            this.addAccountToolStripMenuItem.Click += new System.EventHandler(this.AddAccountToolStripMenuItem_Click);
-            // 
-            // editDetailsToolStripMenuItem
-            // 
-            this.editDetailsToolStripMenuItem.Name = "editDetailsToolStripMenuItem";
-            this.editDetailsToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
-            this.editDetailsToolStripMenuItem.Text = "Edit Details...";
-            this.editDetailsToolStripMenuItem.Click += new System.EventHandler(this.EditDetailsToolStripMenuItem_Click);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -171,9 +172,9 @@
             this.splitContainer1.Panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.cmAccounts.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.cmAccounts.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

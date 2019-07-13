@@ -1,10 +1,12 @@
 ﻿using BlobManager.App.Classes;
 using BlobManager.App.Models;
+using BlobManager.App.Services;
 using BlobManager.App.WinForms;
 using JsonSettings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinForms.Library.Models;
 
@@ -121,6 +123,41 @@ namespace BlobManager.App
                     _options.Save();
                 }
             }            
+        }
+
+        private async void TvwObjects_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            try
+            {
+                var accountNode = e.Node as AccountNode;
+                if (!accountNode?.HasContainers() ?? false)
+                {
+                    await DoAccountActionAsync("Loading containers...", async () =>
+                    {
+                        var service = new BlobService(accountNode.Account.Name, accountNode.Account.Key);
+                        var containers = await service.ListContainersAsync();
+                        accountNode.LoadContainers(containers);
+                    });                                        
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);            
+            }
+        }
+
+        private async Task DoAccountActionAsync(string statusText, Func<Task> task)
+        {
+            string status = tslAccountStatus.Text;
+            tslAccountStatus.Text = statusText;
+            try
+            {
+                await task.Invoke();
+            }
+            finally
+            {
+                tslAccountStatus.Text = status;
+            }
         }
     }
 }
