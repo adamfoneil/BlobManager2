@@ -1,4 +1,5 @@
-﻿using BlobManager2.Models;
+﻿using BlobManager2.Classes;
+using BlobManager2.Models;
 using BlobManager2.WinForms;
 using JsonSettings;
 using System;
@@ -34,9 +35,21 @@ namespace BlobManager2
 
         private void FillAccounts()
         {
-            tvwObjects.Nodes.Clear();
+            tvwObjects.Nodes.Clear();            
+
+            var root = tvwObjects.Nodes.Add("root", "Azure Storage Accounts");
+            root.ImageKey = "accounts.png";
+            root.SelectedImageKey = "accounts.png";
+
+            int count = _options.Accounts?.Count ?? 0;
+            string text = (count != 1) ? "accounts" : "account";
+            tslAccountStatus.Text = $"{count} {text}";
+
             if (!_options.Accounts?.Any() ?? true) return;
-            
+
+            foreach (var a in _options.Accounts) root.Nodes.Add(new AccountNode(a));
+
+            root.Expand();
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -52,17 +65,61 @@ namespace BlobManager2
             }
         }
 
-        private void BtnAddAccount_Click(object sender, EventArgs e)
+        private void AddAccountToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dlg = new frmStorageAccount();
-            if (dlg.ShowDialog() == DialogResult.OK)
+            try
             {
-                var list = _options.Accounts?.ToList() ?? new List<Options.StorageAccount>();
-                list.Add(new Options.StorageAccount() { Name = dlg.AccountName, Key = dlg.AccountKey });
-                _options.Accounts = list.ToArray();
-                _options.Save();
-                FillAccounts();
+                var dlg = new frmStorageAccount();
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    if (_options.Accounts == null) _options.Accounts = new HashSet<Options.StorageAccount>();
+                    _options.Accounts.Add(dlg.SelectedAccount);
+                    _options.Save();
+                    FillAccounts();
+                }
             }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+        }
+
+        private void TvwObjects_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                var accountNode = tvwObjects.SelectedNode as AccountNode;
+                if (accountNode != null)
+                {
+                    if (MessageBox.Show($"This will remove the '{accountNode.Name}' account node.", "Remove Account", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                    {
+                        var account = _options.GetAccount[accountNode.Name];
+                        _options.Accounts.Remove(account);
+                        FillAccounts();
+                    }
+                }
+            }
+        }
+
+        private void CmAccounts_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var accountNode = tvwObjects.SelectedNode as AccountNode;
+            editDetailsToolStripMenuItem.Enabled = (accountNode != null);
+        }
+
+        private void EditDetailsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var accountNode = tvwObjects.SelectedNode as AccountNode;
+            if (accountNode != null)
+            {
+                var dlg = new frmStorageAccount();
+                dlg.SelectedAccount = accountNode.Account;
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    
+                }
+            }
+            
         }
     }
 }

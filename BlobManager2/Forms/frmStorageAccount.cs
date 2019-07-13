@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAzure.Storage;
+﻿using BlobManager2.Models;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
@@ -14,8 +15,11 @@ namespace BlobManager2.WinForms
 			InitializeComponent();
 		}
 
-		public string AccountName { get { return tbName.Text; } }
-		public string AccountKey { get { return tbKey.Text; } }
+        public Options.StorageAccount SelectedAccount
+        {
+            set { tbName.Text = value.Name; tbKey.Text = value.Key; }
+            get { return new Options.StorageAccount() { Name = tbName.Text, Key = tbKey.Text }; }            
+        }
 
 		private async void btnOK_Click(object sender, EventArgs e)
 		{
