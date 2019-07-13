@@ -34,7 +34,7 @@ namespace BlobManager.App.Classes
 
         public void LoadContainers(IEnumerable<string> containers)
         {
-            RemovePlaceholder();
+            RemovePlaceholder();            
             foreach (string name in containers) Nodes.Add(new ContainerNode(name));
         }
 

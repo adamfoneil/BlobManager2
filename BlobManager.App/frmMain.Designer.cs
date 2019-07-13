@@ -41,12 +41,17 @@
             this.imlSmallIcons = new System.Windows.Forms.ImageList(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tslAccountStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusStrip2 = new System.Windows.Forms.StatusStrip();
+            this.tslBlobStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lvBlobs = new System.Windows.Forms.ListView();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.cmAccounts.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.statusStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -83,6 +88,11 @@
             // 
             this.splitContainer1.Panel1.Controls.Add(this.tvwObjects);
             this.splitContainer1.Panel1.Controls.Add(this.statusStrip1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.lvBlobs);
+            this.splitContainer1.Panel2.Controls.Add(this.statusStrip2);
             this.splitContainer1.Size = new System.Drawing.Size(685, 269);
             this.splitContainer1.SplitterDistance = 228;
             this.splitContainer1.TabIndex = 2;
@@ -91,6 +101,7 @@
             // 
             this.tvwObjects.ContextMenuStrip = this.cmAccounts;
             this.tvwObjects.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvwObjects.FullRowSelect = true;
             this.tvwObjects.ImageIndex = 0;
             this.tvwObjects.ImageList = this.imlSmallIcons;
             this.tvwObjects.Location = new System.Drawing.Point(0, 0);
@@ -100,6 +111,7 @@
             this.tvwObjects.Size = new System.Drawing.Size(228, 247);
             this.tvwObjects.TabIndex = 0;
             this.tvwObjects.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.TvwObjects_BeforeExpand);
+            this.tvwObjects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TvwObjects_AfterSelect);
             this.tvwObjects.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TvwObjects_KeyDown);
             // 
             // cmAccounts
@@ -152,6 +164,32 @@
             this.tslAccountStatus.Text = "0 accounts";
             this.tslAccountStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // statusStrip2
+            // 
+            this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tslBlobStatus});
+            this.statusStrip2.Location = new System.Drawing.Point(0, 247);
+            this.statusStrip2.Name = "statusStrip2";
+            this.statusStrip2.Size = new System.Drawing.Size(453, 22);
+            this.statusStrip2.TabIndex = 0;
+            this.statusStrip2.Text = "statusStrip2";
+            // 
+            // tslBlobStatus
+            // 
+            this.tslBlobStatus.Name = "tslBlobStatus";
+            this.tslBlobStatus.Size = new System.Drawing.Size(45, 17);
+            this.tslBlobStatus.Text = "0 blobs";
+            // 
+            // lvBlobs
+            // 
+            this.lvBlobs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvBlobs.Location = new System.Drawing.Point(0, 0);
+            this.lvBlobs.Name = "lvBlobs";
+            this.lvBlobs.Size = new System.Drawing.Size(453, 247);
+            this.lvBlobs.TabIndex = 1;
+            this.lvBlobs.UseCompatibleStateImageBehavior = false;
+            this.lvBlobs.View = System.Windows.Forms.View.Details;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -170,11 +208,15 @@
             this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.cmAccounts.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.statusStrip2.ResumeLayout(false);
+            this.statusStrip2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -193,6 +235,9 @@
         private System.Windows.Forms.ContextMenuStrip cmAccounts;
         private System.Windows.Forms.ToolStripMenuItem addAccountToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editDetailsToolStripMenuItem;
+        private System.Windows.Forms.StatusStrip statusStrip2;
+        private System.Windows.Forms.ToolStripStatusLabel tslBlobStatus;
+        private System.Windows.Forms.ListView lvBlobs;
     }
 }
 

@@ -132,11 +132,13 @@ namespace BlobManager.App
                 var accountNode = e.Node as AccountNode;
                 if (!accountNode?.HasContainers() ?? false)
                 {
-                    await DoAccountActionAsync("Loading containers...", async () =>
+                    await DoActionAsync(tslAccountStatus, "Loading containers...", async () =>
                     {
                         var service = new BlobService(accountNode.Account.Name, accountNode.Account.Key);
                         var containers = await service.ListContainersAsync();
+                        tvwObjects.BeginUpdate();
                         accountNode.LoadContainers(containers);
+                        tvwObjects.EndUpdate();
                     });                                        
                 }
             }
@@ -146,17 +148,44 @@ namespace BlobManager.App
             }
         }
 
-        private async Task DoAccountActionAsync(string statusText, Func<Task> task)
+        private async void TvwObjects_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            string status = tslAccountStatus.Text;
-            tslAccountStatus.Text = statusText;
             try
             {
-                await task.Invoke();
+                var containerNode = e.Node as ContainerNode;
+                if (containerNode != null)
+                {
+                    await DoActionAsync(tslBlobStatus, $"Listing blobs in {containerNode.Name}...", async () =>
+                    {
+                        var account = (containerNode.Parent as AccountNode).Account;
+                        var service = new BlobService(account.Name, account.Key);
+                        var results = await service.ListBlobsAsync(containerNode.Name);
+                        tslBlobStatus.Text = $"{results.Blobs.Count():n0} blobs, {results.Folders.Count():n0} folders";
+                        lvBlobs.BeginUpdate();
+                        lvBlobs.EndUpdate();
+                    }, false);
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+        }
+
+        private async Task DoActionAsync(ToolStripLabel label, string statusText, Func<Task> action, bool restoreStatusText = true)
+        {
+            string originalStatus = label.Text;
+            label.Text = statusText;
+            try
+            {
+                await action.Invoke();
             }
             finally
             {
-                tslAccountStatus.Text = status;
+                if (restoreStatusText)
+                {
+                    label.Text = originalStatus;
+                }      
             }
         }
     }
