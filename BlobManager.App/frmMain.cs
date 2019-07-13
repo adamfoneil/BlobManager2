@@ -162,6 +162,8 @@ namespace BlobManager.App
                         var results = await service.ListBlobsAsync(containerNode.Name);
                         tslBlobStatus.Text = $"{results.Blobs.Count():n0} blobs, {results.Folders.Count():n0} folders";
                         lvBlobs.BeginUpdate();
+                        lvBlobs.Items.Clear();
+                        lvBlobs.Items.AddRange(results.Folders.Select(folder => new FolderItem(folder)).ToArray());
                         lvBlobs.EndUpdate();
                     }, false);
                 }

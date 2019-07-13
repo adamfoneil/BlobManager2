@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Classes\AccountNode.cs" />
     <Compile Include="Classes\ContainerNode.cs" />
+    <Compile Include="Classes\FolderItem.cs" />
     <Compile Include="Classes\PlaceholderNode.cs" />
     <Compile Include="Forms\frmStorageAccount.cs">
       <SubType>Form</SubType>
