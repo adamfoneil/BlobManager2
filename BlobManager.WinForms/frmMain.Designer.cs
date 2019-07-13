@@ -107,6 +107,7 @@
             this.imlSmallIcons.TransparentColor = System.Drawing.Color.Transparent;
             this.imlSmallIcons.Images.SetKeyName(0, "account.png");
             this.imlSmallIcons.Images.SetKeyName(1, "accounts.png");
+            this.imlSmallIcons.Images.SetKeyName(2, "container.png");
             // 
             // statusStrip1
             // 
@@ -133,20 +134,20 @@
             this.addAccountToolStripMenuItem,
             this.editDetailsToolStripMenuItem});
             this.cmAccounts.Name = "cmAccounts";
-            this.cmAccounts.Size = new System.Drawing.Size(181, 70);
+            this.cmAccounts.Size = new System.Drawing.Size(154, 48);
             this.cmAccounts.Opening += new System.ComponentModel.CancelEventHandler(this.CmAccounts_Opening);
             // 
             // addAccountToolStripMenuItem
             // 
             this.addAccountToolStripMenuItem.Name = "addAccountToolStripMenuItem";
-            this.addAccountToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addAccountToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.addAccountToolStripMenuItem.Text = "Add Account...";
             this.addAccountToolStripMenuItem.Click += new System.EventHandler(this.AddAccountToolStripMenuItem_Click);
             // 
             // editDetailsToolStripMenuItem
             // 
             this.editDetailsToolStripMenuItem.Name = "editDetailsToolStripMenuItem";
-            this.editDetailsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.editDetailsToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.editDetailsToolStripMenuItem.Text = "Edit Details...";
             this.editDetailsToolStripMenuItem.Click += new System.EventHandler(this.EditDetailsToolStripMenuItem_Click);
             // 
