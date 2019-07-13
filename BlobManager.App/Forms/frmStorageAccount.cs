@@ -1,4 +1,4 @@
-﻿using BlobManager2.Models;
+﻿using BlobManager.App.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -6,9 +6,9 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace BlobManager2.WinForms
+namespace BlobManager.App.WinForms
 {
-	public partial class frmStorageAccount : Form
+    public partial class frmStorageAccount : Form
 	{
 		public frmStorageAccount()
 		{

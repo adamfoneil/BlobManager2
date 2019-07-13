@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlobManager2.Services
+namespace BlobManager.App.Services
 {
     /// <summary>
     /// Handles low-level storage access

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using WinForms.Library.Models;
 
-namespace BlobManager2.Models
+namespace BlobManager.App.Models
 {
     public class Options : JsonSettingsBase
     {

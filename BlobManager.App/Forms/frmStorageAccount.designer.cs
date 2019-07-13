@@ -1,4 +1,4 @@
-﻿namespace BlobManager2.WinForms
+﻿namespace BlobManager.App.WinForms
 {
 	partial class frmStorageAccount
 	{

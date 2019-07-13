@@ -1,4 +1,4 @@
-﻿namespace BlobManager2
+﻿namespace BlobManager.App
 {
     partial class frmMain
     {

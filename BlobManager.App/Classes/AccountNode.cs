@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
-using static BlobManager2.Models.Options;
+using static BlobManager.App.Models.Options;
 
-namespace BlobManager2.Classes
+namespace BlobManager.App.Classes
 {
     public class AccountNode : TreeNode
     {

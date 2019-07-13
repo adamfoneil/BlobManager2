@@ -1,6 +1,6 @@
-﻿using BlobManager2.Classes;
-using BlobManager2.Models;
-using BlobManager2.WinForms;
+﻿using BlobManager.App.Classes;
+using BlobManager.App.Models;
+using BlobManager.App.WinForms;
 using JsonSettings;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using WinForms.Library.Models;
 
-namespace BlobManager2
+namespace BlobManager.App
 {
     public partial class frmMain : Form
     {
