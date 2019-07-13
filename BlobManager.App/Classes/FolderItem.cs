@@ -5,7 +5,7 @@ namespace BlobManager.App.Classes
 {
     public class FolderItem : ListViewItem
     {        
-        public FolderItem(CloudBlobDirectory directory) : base(directory.Prefix)
+        public FolderItem(CloudBlobDirectory directory) : base(directory.Prefix.Substring(0, directory.Prefix.Length - 1))
         {
             ImageKey = "folder.png";
             Directory = directory;

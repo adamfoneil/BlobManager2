@@ -30,9 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.tbSearch = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tvwObjects = new System.Windows.Forms.TreeView();
             this.cmAccounts = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -41,15 +38,20 @@
             this.imlSmallIcons = new System.Windows.Forms.ImageList(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tslAccountStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusStrip2 = new System.Windows.Forms.StatusStrip();
-            this.tslBlobStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.lvBlobs = new System.Windows.Forms.ListView();
             this.colHame = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colDateModified = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colContentType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.toolStrip1.SuspendLayout();
+            this.statusStrip2 = new System.Windows.Forms.StatusStrip();
+            this.tslBlobStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.tbSearch = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.tbSearchContainers = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -57,48 +59,28 @@
             this.cmAccounts.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.statusStrip2.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
+            this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tbSearch,
-            this.toolStripLabel1});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(817, 25);
-            this.toolStrip1.TabIndex = 0;
-            this.toolStrip1.Text = "toolStrip1";
-            // 
-            // tbSearch
-            // 
-            this.tbSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tbSearch.Name = "tbSearch";
-            this.tbSearch.Size = new System.Drawing.Size(150, 25);
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(45, 22);
-            this.toolStripLabel1.Text = "Search:";
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 25);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.tvwObjects);
+            this.splitContainer1.Panel1.Controls.Add(this.toolStrip2);
             this.splitContainer1.Panel1.Controls.Add(this.statusStrip1);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.lvBlobs);
+            this.splitContainer1.Panel2.Controls.Add(this.toolStrip1);
             this.splitContainer1.Panel2.Controls.Add(this.statusStrip2);
-            this.splitContainer1.Size = new System.Drawing.Size(817, 269);
+            this.splitContainer1.Size = new System.Drawing.Size(817, 294);
             this.splitContainer1.SplitterDistance = 271;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -110,7 +92,7 @@
             this.tvwObjects.HideSelection = false;
             this.tvwObjects.ImageIndex = 0;
             this.tvwObjects.ImageList = this.imlSmallIcons;
-            this.tvwObjects.Location = new System.Drawing.Point(0, 0);
+            this.tvwObjects.Location = new System.Drawing.Point(0, 25);
             this.tvwObjects.Name = "tvwObjects";
             this.tvwObjects.SelectedImageIndex = 0;
             this.tvwObjects.ShowLines = false;
@@ -156,7 +138,7 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tslAccountStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 247);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 272);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(271, 22);
             this.statusStrip1.SizingGrip = false;
@@ -171,22 +153,6 @@
             this.tslAccountStatus.Text = "0 accounts";
             this.tslAccountStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // statusStrip2
-            // 
-            this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tslBlobStatus});
-            this.statusStrip2.Location = new System.Drawing.Point(0, 247);
-            this.statusStrip2.Name = "statusStrip2";
-            this.statusStrip2.Size = new System.Drawing.Size(542, 22);
-            this.statusStrip2.TabIndex = 0;
-            this.statusStrip2.Text = "statusStrip2";
-            // 
-            // tslBlobStatus
-            // 
-            this.tslBlobStatus.Name = "tslBlobStatus";
-            this.tslBlobStatus.Size = new System.Drawing.Size(45, 17);
-            this.tslBlobStatus.Text = "0 blobs";
-            // 
             // lvBlobs
             // 
             this.lvBlobs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -196,7 +162,7 @@
             this.colSize,
             this.colContentType});
             this.lvBlobs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lvBlobs.Location = new System.Drawing.Point(0, 0);
+            this.lvBlobs.Location = new System.Drawing.Point(0, 25);
             this.lvBlobs.Name = "lvBlobs";
             this.lvBlobs.Size = new System.Drawing.Size(542, 247);
             this.lvBlobs.SmallImageList = this.imlSmallIcons;
@@ -228,13 +194,77 @@
             this.colContentType.Text = "Content Type";
             this.colContentType.Width = 123;
             // 
+            // statusStrip2
+            // 
+            this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tslBlobStatus});
+            this.statusStrip2.Location = new System.Drawing.Point(0, 272);
+            this.statusStrip2.Name = "statusStrip2";
+            this.statusStrip2.Size = new System.Drawing.Size(542, 22);
+            this.statusStrip2.TabIndex = 0;
+            this.statusStrip2.Text = "statusStrip2";
+            // 
+            // tslBlobStatus
+            // 
+            this.tslBlobStatus.Name = "tslBlobStatus";
+            this.tslBlobStatus.Size = new System.Drawing.Size(45, 17);
+            this.tslBlobStatus.Text = "0 blobs";
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tbSearch,
+            this.toolStripLabel1});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(542, 25);
+            this.toolStrip1.TabIndex = 2;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // tbSearch
+            // 
+            this.tbSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tbSearch.Name = "tbSearch";
+            this.tbSearch.Size = new System.Drawing.Size(120, 25);
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(77, 22);
+            this.toolStripLabel1.Text = "Search Blobs:";
+            // 
+            // toolStrip2
+            // 
+            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tbSearchContainers,
+            this.toolStripLabel2});
+            this.toolStrip2.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip2.Name = "toolStrip2";
+            this.toolStrip2.Size = new System.Drawing.Size(271, 25);
+            this.toolStrip2.TabIndex = 2;
+            this.toolStrip2.Text = "toolStrip2";
+            // 
+            // tbSearchContainers
+            // 
+            this.tbSearchContainers.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tbSearchContainers.Name = "tbSearchContainers";
+            this.tbSearchContainers.Size = new System.Drawing.Size(120, 25);
+            this.tbSearchContainers.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TbSearchContainers_KeyDown);
+            // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(105, 22);
+            this.toolStripLabel2.Text = "Search Containers:";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(817, 294);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.toolStrip1);
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmMain";
@@ -242,8 +272,6 @@
             this.Text = "Helloblob";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.Load += new System.EventHandler(this.FrmMain_Load);
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -255,16 +283,15 @@
             this.statusStrip1.PerformLayout();
             this.statusStrip2.ResumeLayout(false);
             this.statusStrip2.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
+            this.toolStrip2.ResumeLayout(false);
+            this.toolStrip2.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripTextBox tbSearch;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TreeView tvwObjects;
         private System.Windows.Forms.ImageList imlSmallIcons;
@@ -281,6 +308,12 @@
         private System.Windows.Forms.ColumnHeader colType;
         private System.Windows.Forms.ColumnHeader colSize;
         private System.Windows.Forms.ColumnHeader colContentType;
+        private System.Windows.Forms.ToolStrip toolStrip2;
+        private System.Windows.Forms.ToolStripTextBox tbSearchContainers;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripTextBox tbSearch;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
     }
 }
 

@@ -190,5 +190,30 @@ namespace BlobManager.App
                 }      
             }
         }
+
+        private async void TbSearchContainers_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                string searchText = tbSearch.Text;
+                if (searchText.Length > 2 && e.KeyCode == Keys.Enter)
+                {
+                    tvwObjects.Nodes.Clear();
+                    foreach (var acc in _options.Accounts)
+                    {
+                        var service = new BlobService(acc.Name, acc.Key);
+                        var containers = await service.ListContainersAsync(searchText);
+                        if (containers.Any())
+                        {
+
+                        }
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+        }
     }
 }
