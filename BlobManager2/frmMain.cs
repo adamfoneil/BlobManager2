@@ -116,7 +116,8 @@ namespace BlobManager2
                 dlg.SelectedAccount = accountNode.Account;
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
-                    
+                    _options.Accounts.RemoveWhere(row => row.Name.Equals(dlg.SelectedAccount.Name));
+                    _options.Accounts.Add(dlg.SelectedAccount);
                 }
             }
             
