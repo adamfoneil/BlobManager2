@@ -13,7 +13,9 @@ namespace BlobManager.App.Classes
             SubItems.AddRange(new ListViewSubItem[]
             {
                 new ListViewSubItem(this, blob.Properties.LastModified.ToString()),
-                new ListViewSubItem(this, FileSystem.GetFileType(blob.Name))
+                new ListViewSubItem(this, FileSystem.GetFileType(blob.Name)),
+                new ListViewSubItem(this, FileSystem.GetFileSize(blob.Properties.Length)),
+                new ListViewSubItem(this, blob.Properties.ContentType)
             });
         }
 

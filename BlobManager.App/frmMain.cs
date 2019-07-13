@@ -15,6 +15,7 @@ namespace BlobManager.App
     public partial class frmMain : Form
     {
         private Options _options = null;
+        static int searchFieldCycle = 0;
 
         public frmMain()
         {
@@ -240,6 +241,21 @@ namespace BlobManager.App
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message);
+            }
+        }
+
+        private void FrmMain_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F3)
+            {
+                searchFieldCycle++;
+                var fields = new Dictionary<int, ToolStripTextBox>()
+                {
+                    { 0, tbSearchContainers },
+                    { 1, tbSearchBlobs }
+                };
+
+                fields[searchFieldCycle % 2].Focus();
             }
         }
     }

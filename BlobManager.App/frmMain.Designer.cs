@@ -48,7 +48,7 @@
             this.colSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colContentType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.tbSearch = new System.Windows.Forms.ToolStripTextBox();
+            this.tbSearchBlobs = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.tslBlobStatus = new System.Windows.Forms.ToolStripStatusLabel();
@@ -224,7 +224,7 @@
             // 
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tbSearch,
+            this.tbSearchBlobs,
             this.toolStripLabel1,
             this.tslCurrentPath});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -233,11 +233,11 @@
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // tbSearch
+            // tbSearchBlobs
             // 
-            this.tbSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tbSearch.Name = "tbSearch";
-            this.tbSearch.Size = new System.Drawing.Size(120, 25);
+            this.tbSearchBlobs.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tbSearchBlobs.Name = "tbSearchBlobs";
+            this.tbSearchBlobs.Size = new System.Drawing.Size(120, 25);
             // 
             // toolStripLabel1
             // 
@@ -275,12 +275,14 @@
             this.ClientSize = new System.Drawing.Size(817, 294);
             this.Controls.Add(this.splitContainer1);
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Helloblob";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.Load += new System.EventHandler(this.FrmMain_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmMain_KeyDown);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -321,7 +323,7 @@
         private System.Windows.Forms.ToolStripTextBox tbSearchContainers;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripTextBox tbSearch;
+        private System.Windows.Forms.ToolStripTextBox tbSearchBlobs;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripLabel tslCurrentPath;
     }
