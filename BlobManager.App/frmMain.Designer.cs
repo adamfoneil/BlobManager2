@@ -52,6 +52,7 @@
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.tslBlobStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.pbUpload = new System.Windows.Forms.ToolStripProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -195,6 +196,7 @@
             this.lvBlobs.TabIndex = 1;
             this.lvBlobs.UseCompatibleStateImageBehavior = false;
             this.lvBlobs.View = System.Windows.Forms.View.Details;
+            this.lvBlobs.DragDrop += new System.Windows.Forms.DragEventHandler(this.LvBlobs_DragDrop);
             this.lvBlobs.DoubleClick += new System.EventHandler(this.LvBlobs_DoubleClick);
             // 
             // colHame
@@ -249,7 +251,8 @@
             // statusStrip2
             // 
             this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tslBlobStatus});
+            this.tslBlobStatus,
+            this.pbUpload});
             this.statusStrip2.Location = new System.Drawing.Point(0, 272);
             this.statusStrip2.Name = "statusStrip2";
             this.statusStrip2.Size = new System.Drawing.Size(542, 22);
@@ -261,6 +264,11 @@
             this.tslBlobStatus.Name = "tslBlobStatus";
             this.tslBlobStatus.Size = new System.Drawing.Size(45, 17);
             this.tslBlobStatus.Text = "0 blobs";
+            // 
+            // pbUpload
+            // 
+            this.pbUpload.Name = "pbUpload";
+            this.pbUpload.Size = new System.Drawing.Size(100, 16);
             // 
             // frmMain
             // 
@@ -319,6 +327,7 @@
         private System.Windows.Forms.ToolStrip blobToolstrip;
         private System.Windows.Forms.ToolStripTextBox tbSearchBlobs;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStripProgressBar pbUpload;
     }
 }
 

@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,6 +50,7 @@
     <Compile Include="Classes\AccountNode.cs" />
     <Compile Include="Classes\BlobItem.cs" />
     <Compile Include="Classes\ContainerNode.cs" />
+    <Compile Include="Classes\FileDropManager.cs" />
     <Compile Include="Classes\FolderItem.cs" />
     <Compile Include="Classes\ListViewColumnSizer.cs" />
     <Compile Include="Classes\PlaceholderNode.cs" />

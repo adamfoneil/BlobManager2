@@ -6,6 +6,7 @@ using BlobManager.App.WinForms;
 using JsonSettings;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,6 +19,7 @@ namespace BlobManager.App
         private Options _options = null;
         private ListViewColumnSizer _columnSizer;
         private readonly ToolStripBreadcrumb _breadcrumb;
+        private readonly FileDropManager _dropHandler;
 
         static int searchFieldCycle = 0;
 
@@ -25,6 +27,35 @@ namespace BlobManager.App
         {
             InitializeComponent();
             _breadcrumb = new ToolStripBreadcrumb(blobToolstrip);
+            _dropHandler = new FileDropManager(lvBlobs, () => GetCurrentContainer() != null);
+            _dropHandler.DropStarted += DropStarted;
+            _dropHandler.FileHandling += UploadFileAsync;
+            _dropHandler.DropCompleted += UploadComplete;
+        }
+
+        private void DropStarted(IEnumerable<string> fileNames)
+        {
+            pbUpload.Visible = true;
+        }
+
+        private async Task<ListViewItem> UploadFileAsync(string fileName)
+        {
+            BlobItem result = null;
+            await DoActionAsync(tslBlobStatus, $"Uploading {Path.GetFileName(fileName)}...", async () =>
+            {
+                var containerNode = GetCurrentContainer();
+                var account = (containerNode.Parent as AccountNode).Account;
+                var service = new BlobService(account.Name, account.Key);
+                var blob = await service.UploadFileAsync(containerNode.Name, fileName);
+                result = new BlobItem(blob, imlSmallIcons);
+            });
+            return result;
+        }
+
+        private void UploadComplete(object sender, EventArgs e)
+        {
+            // update status bar blob and folder counts
+            pbUpload.Visible = false;
         }
 
         private void FrmMain_Load(object sender, EventArgs e)
@@ -192,8 +223,7 @@ namespace BlobManager.App
             }
             
             await DoActionAsync(tslBlobStatus, $"Listing blobs in {containerNode.Name}...", async () =>
-            {
-                
+            {                
                 var service = new BlobService(accountNode.Name, accountNode.Account.Key);
                 var results = await service.ListBlobsAsync(containerNode.Name, directory);
                 tslBlobStatus.Text = $"{results.Blobs.Count():n0} blobs, {results.Folders.Count():n0} folders";
@@ -319,6 +349,11 @@ namespace BlobManager.App
             {
                 return null;
             }
+        }
+
+        private void LvBlobs_DragDrop(object sender, DragEventArgs e)
+        {
+            
         }
     }
 }

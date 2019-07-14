@@ -2,8 +2,10 @@
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace BlobManager.App.Services
 {
@@ -23,8 +25,7 @@ namespace BlobManager.App.Services
 
         public async Task<IEnumerable<string>> ListContainersAsync(string prefix = null)
         {
-            var account = GetAccount();
-            var client = account.CreateCloudBlobClient();
+            var client = GetClient();
 
             BlobContinuationToken token = null;
             List<string> results = new List<string>();
@@ -41,15 +42,14 @@ namespace BlobManager.App.Services
 
         public async Task<BlobListing> ListBlobsAsync(string containerName, string prefix = null)
         {
-            var account = GetAccount();
-            var client = account.CreateCloudBlobClient();
+            CloudBlobClient client = GetClient();
             var container = client.GetContainerReference(containerName);
 
             BlobContinuationToken token = null;
             var blobs = new List<CloudBlockBlob>();
             var folders = new List<CloudBlobDirectory>();
             do
-            {                
+            {
                 var response = await container.ListBlobsSegmentedAsync(prefix, token);
                 token = response.ContinuationToken;
                 blobs.AddRange(response.Results.OfType<CloudBlockBlob>());
@@ -57,6 +57,25 @@ namespace BlobManager.App.Services
             } while (token != null);
 
             return new BlobListing() { Blobs = blobs, Folders = folders };
+        }
+
+        private CloudBlobClient GetClient()
+        {
+            var account = GetAccount();
+            var client = account.CreateCloudBlobClient();
+            return client;
+        }
+
+        public async Task<CloudBlockBlob> UploadFileAsync(string containerName, string path)
+        {
+            CloudBlobClient client = GetClient();
+            var container = client.GetContainerReference(containerName);
+
+            var blob = container.GetBlockBlobReference(Path.GetFileName(path));
+            blob.Properties.ContentType = MimeMapping.GetMimeMapping(path);
+            await blob.UploadFromFileAsync(path);
+            
+            return blob;
         }
 
         private CloudStorageAccount GetAccount()
