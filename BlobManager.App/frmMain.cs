@@ -38,15 +38,15 @@ namespace BlobManager.App
             pbUpload.Visible = true;
         }
 
-        private async Task<ListViewItem> UploadFileAsync(string fileName)
+        private async Task<ListViewItem> UploadFileAsync(FileHandlingEventArgs e)
         {
             BlobItem result = null;
-            await DoActionAsync(tslBlobStatus, $"Uploading {Path.GetFileName(fileName)}...", async () =>
+            await DoActionAsync(tslBlobStatus, $"Uploading {Path.GetFileName(e.Filename)}...", async () =>
             {
                 var containerNode = GetCurrentContainer();
                 var account = (containerNode.Parent as AccountNode).Account;
                 var service = new BlobService(account.Name, account.Key);
-                var blob = await service.UploadFileAsync(containerNode.Name, fileName);
+                var blob = await service.UploadFileAsync(containerNode.Name, e.Filename);
                 result = new BlobItem(blob, imlSmallIcons);
             });
             return result;

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -28,14 +30,16 @@ namespace BlobManager.App.Classes
 
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-            DropStarted?.Invoke(files);
+            var resolvedFiles = ResolveFileList(files).ToArray();
+
+            DropStarted?.Invoke(resolvedFiles);
 
             int done = 0;
             var percentComplete = 0d;
-            foreach (var file in files)
+            foreach (var file in resolvedFiles)
             {
                 done++;
-                percentComplete = done / (double)files.Length;
+                percentComplete = done / (double)resolvedFiles.Length;
                 try
                 {
                     var item = await FileHandling?.Invoke(new FileHandlingEventArgs(file, percentComplete));
@@ -49,7 +53,24 @@ namespace BlobManager.App.Classes
 
             DropCompleted?.Invoke(this, new EventArgs());
         }
-        
+
+        /// <summary>
+        /// Returns file names as-is, but drills into directories to discover file names within them
+        /// </summary>
+        private IEnumerable<string> ResolveFileList(string[] paths)
+        {
+            foreach (string path in paths)
+            {
+                if (File.Exists(path)) yield return path;
+
+                if (Directory.Exists(path))
+                {
+                    var files = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
+                    foreach (var file in files) yield return file;
+                }
+            }
+        }
+
         public ListView ListView { get; }
     }
 
