@@ -1,4 +1,5 @@
 ﻿using BlobManager.App.Classes;
+using BlobManager.App.Controls;
 using BlobManager.App.Models;
 using BlobManager.App.Services;
 using BlobManager.App.WinForms;
@@ -16,12 +17,14 @@ namespace BlobManager.App
     {
         private Options _options = null;
         private ListViewColumnSizer _columnSizer;
+        private readonly ToolStripBreadcrumb _breadcrumb;
 
         static int searchFieldCycle = 0;
 
         public frmMain()
         {
             InitializeComponent();
+            _breadcrumb = new ToolStripBreadcrumb(blobToolstrip);
         }
 
         private void FrmMain_Load(object sender, EventArgs e)
@@ -108,6 +111,7 @@ namespace BlobManager.App
                     {
                         var account = _options.GetAccount[accountNode.Name];
                         _options.Accounts.Remove(account);
+                        _options.Save();
                         FillAccounts();
                     }
                 }
@@ -166,25 +170,39 @@ namespace BlobManager.App
                 var containerNode = e.Node as ContainerNode;
                 if (containerNode != null)
                 {
-                    tslCurrentPath.Text = containerNode.Parent.Text + " / " + containerNode.Name;
-                    await DoActionAsync(tslBlobStatus, $"Listing blobs in {containerNode.Name}...", async () =>
-                    {
-                        var account = (containerNode.Parent as AccountNode).Account;
-                        var service = new BlobService(account.Name, account.Key);
-                        var results = await service.ListBlobsAsync(containerNode.Name);
-                        tslBlobStatus.Text = $"{results.Blobs.Count():n0} blobs, {results.Folders.Count():n0} folders";
-                        lvBlobs.BeginUpdate();
-                        lvBlobs.Items.Clear();
-                        lvBlobs.Items.AddRange(results.Folders.Select(folder => new FolderItem(folder)).ToArray());
-                        lvBlobs.Items.AddRange(results.Blobs.Select(blob => new BlobItem(blob, imlSmallIcons)).ToArray());
-                        lvBlobs.EndUpdate();
-                    }, false);
+                    await LoadBlobListViewAsync(containerNode);
                 }
             }
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message);
             }
+        }
+
+        private async Task LoadBlobListViewAsync(ContainerNode containerNode, string directory = null)
+        {
+            var accountNode = containerNode.Parent as AccountNode;
+
+            _breadcrumb.Clear();
+            _breadcrumb.Add(accountNode);
+            _breadcrumb.Add(containerNode, async (node) => await LoadBlobListViewAsync(node));
+            if (!string.IsNullOrEmpty(directory))
+            {
+                _breadcrumb.AddPath(directory, async (folder) => await LoadBlobListViewAsync(containerNode, folder.FullPath));
+            }
+            
+            await DoActionAsync(tslBlobStatus, $"Listing blobs in {containerNode.Name}...", async () =>
+            {
+                
+                var service = new BlobService(accountNode.Name, accountNode.Account.Key);
+                var results = await service.ListBlobsAsync(containerNode.Name, directory);
+                tslBlobStatus.Text = $"{results.Blobs.Count():n0} blobs, {results.Folders.Count():n0} folders";
+                lvBlobs.BeginUpdate();
+                lvBlobs.Items.Clear();
+                lvBlobs.Items.AddRange(results.Folders.Select(folder => new FolderItem(folder)).ToArray());
+                lvBlobs.Items.AddRange(results.Blobs.Select(blob => new BlobItem(blob, imlSmallIcons)).ToArray());
+                lvBlobs.EndUpdate();
+            }, false);
         }
 
         private async Task DoActionAsync(ToolStripLabel label, string statusText, Func<Task> action, bool restoreStatusText = true)
@@ -223,7 +241,6 @@ namespace BlobManager.App
                                 var containers = await service.ListContainersAsync(searchText);
                                 if (containers.Any())
                                 {
-
                                     var accountNode = new AccountNode(acc);
                                     root.Nodes.Add(accountNode);
                                     tvwObjects.BeginUpdate();
@@ -260,6 +277,47 @@ namespace BlobManager.App
                 };
 
                 fields[searchFieldCycle % 2].Focus();
+            }
+        }
+
+        private async void LvBlobs_DoubleClick(object sender, EventArgs e)
+        {
+            try
+            {
+                var folder = GetSelectedFolder();
+                var container = GetCurrentContainer();
+                if (folder != null && container != null)
+                {
+                    await LoadBlobListViewAsync(container, folder.Directory.Prefix);
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+        }
+
+        private FolderItem GetSelectedFolder()
+        {
+            try
+            {
+                return lvBlobs.SelectedItems[0] as FolderItem;
+            }
+            catch 
+            {
+                return null;
+            }
+        }
+
+        private ContainerNode GetCurrentContainer()
+        {
+            try
+            {
+                return tvwObjects.SelectedNode as ContainerNode;
+            }
+            catch
+            {
+                return null;
             }
         }
     }

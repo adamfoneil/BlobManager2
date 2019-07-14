@@ -1,8 +1,9 @@
-﻿using System.Windows.Forms;
+﻿using BlobManager.App.Interfaces;
+using System.Windows.Forms;
 
 namespace BlobManager.App.Classes
 {
-    public class ContainerNode : TreeNode
+    public class ContainerNode : TreeNode, IBreadcrumbItem
     {        
         public ContainerNode(string name) : base(name)
         {
@@ -12,5 +13,10 @@ namespace BlobManager.App.Classes
         }
 
         public new string Name { get; }
+
+        public string GetBreadcrumbText()
+        {
+            return Name;
+        }
     }
 }
