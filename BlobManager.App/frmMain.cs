@@ -41,12 +41,12 @@ namespace BlobManager.App
         private async Task<ListViewItem> UploadFileAsync(FileHandlingEventArgs e)
         {
             BlobItem result = null;
-            await DoActionAsync(tslBlobStatus, $"Uploading {Path.GetFileName(e.Filename)}...", async () =>
+            await DoActionAsync(tslBlobStatus, $"Uploading {Path.GetFileName(e.FullPath)}...", async () =>
             {
                 var containerNode = GetCurrentContainer();
                 var account = (containerNode.Parent as AccountNode).Account;
                 var service = new BlobService(account.Name, account.Key);
-                var blob = await service.UploadFileAsync(containerNode.Name, e.Filename);
+                var blob = await service.UploadFileAsync(containerNode.Name, e.FullPath);
                 result = new BlobItem(blob, imlSmallIcons);
             });
             return result;

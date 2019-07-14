@@ -32,6 +32,8 @@ namespace BlobManager.App.Classes
 
             var resolvedFiles = ResolveFileList(files).ToArray();
 
+            //string basePath = resolvedFiles.First()
+
             DropStarted?.Invoke(resolvedFiles);
 
             int done = 0;
@@ -42,7 +44,7 @@ namespace BlobManager.App.Classes
                 percentComplete = done / (double)resolvedFiles.Length;
                 try
                 {
-                    var item = await FileHandling?.Invoke(new FileHandlingEventArgs(file, percentComplete));
+                    var item = await FileHandling?.Invoke(new FileHandlingEventArgs(file, "oops", percentComplete));
                     if (item != null) ListView.Items.Add(item);
                 }
                 catch
@@ -76,12 +78,15 @@ namespace BlobManager.App.Classes
 
     public class FileHandlingEventArgs
     {
-        public FileHandlingEventArgs(string fileName, double percentComplete)
+        public FileHandlingEventArgs(string fullPath, string relativePath, double percentComplete)
         {
-            Filename = fileName;
+            FullPath = fullPath;
+            RelativePath = relativePath;
+            PercentComplete = percentComplete;
         }
 
-        public string Filename { get; }
+        public string FullPath { get; }
+        public string RelativePath { get; }
         public double PercentComplete { get; }
     }
 }
