@@ -355,5 +355,13 @@ namespace BlobManager.App
         {
             
         }
+
+        private void LvBlobs_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.C)
+            {
+                //Clipboard.SetDataObject()
+            }            
+        }
     }
 }

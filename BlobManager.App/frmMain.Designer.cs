@@ -198,6 +198,7 @@
             this.lvBlobs.View = System.Windows.Forms.View.Details;
             this.lvBlobs.DragDrop += new System.Windows.Forms.DragEventHandler(this.LvBlobs_DragDrop);
             this.lvBlobs.DoubleClick += new System.EventHandler(this.LvBlobs_DoubleClick);
+            this.lvBlobs.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LvBlobs_KeyDown);
             // 
             // colHame
             // 
