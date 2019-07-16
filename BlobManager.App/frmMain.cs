@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinForms.Library.Models;
+using static BlobManager.App.Services.BlobService;
 
 namespace BlobManager.App
 {
@@ -232,11 +233,11 @@ namespace BlobManager.App
             await DoActionAsync(tslBlobStatus, $"Listing blobs in {containerNode.Name}...", async () =>
             {                
                 var service = new BlobService(accountNode.Name, accountNode.Account.Key);
-                var results = await service.ListBlobsAsync(containerNode.Name, directory);
-                tslBlobStatus.Text = $"{results.Blobs.Count():n0} blobs, {results.Folders.Count():n0} folders";
+                var results = await service.ListBlobsAndDirectoriesAsync(containerNode.Name, directory);
+                tslBlobStatus.Text = $"{results.Blobs.Count():n0} blobs, {results.Directories.Count():n0} folders";
                 lvBlobs.BeginUpdate();
                 lvBlobs.Items.Clear();
-                lvBlobs.Items.AddRange(results.Folders.Select(folder => new FolderItem(folder)).ToArray());
+                lvBlobs.Items.AddRange(results.Directories.Select(folder => new FolderItem(folder)).ToArray());
                 lvBlobs.Items.AddRange(results.Blobs.Select(blob => new BlobItem(blob, imlSmallIcons)).ToArray());
                 lvBlobs.EndUpdate();
             }, false);
@@ -387,15 +388,17 @@ namespace BlobManager.App
                             var service = new BlobService(accountNode.Account.Name, accountNode.Account.Key);
                             var containers = await GetContainersAsync(accountNode);                            
                             foreach (var container in containers)
-                            {
-                                tslBlobStatus.Text = $"Searching {accountNode.Name}.{container}...";
+                            {                                
+                                Progress<SearchProgress> progress = new Progress<SearchProgress>(ReportProgress);
+
+                                var results = await service.SearchBlobsAsync(container, searchText, progress);
                                 lvBlobs.BeginUpdate();
-                                var results = await service.SearchBlobsAsync(container, searchText);
-                                lvBlobs.Items.AddRange(results.Select(blob => new BlobItem(blob, imlSmallIcons)).ToArray());
+                                lvBlobs.Items.AddRange(results.Select(blob => new BlobItem(blob, imlSmallIcons, showPath: true)).ToArray());
                                 lvBlobs.EndUpdate();
                                 tslBlobStatus.Text = $"{lvBlobs.Items.Count:n0} blobs";
                             }
                         }
+                        _breadcrumb.Clear();
                     }
                     else
                     {
@@ -409,10 +412,18 @@ namespace BlobManager.App
             }
         }
 
+        private void ReportProgress(SearchProgress obj)
+        {
+            tslBlobStatus.Text = $"Searching {obj.AccountName}.{obj.ContainerName} {obj.Path}...";
+        }
+
         private IEnumerable<AccountNode> GetAccountNodes()
         {
             var accountNode = tvwObjects.SelectedNode as AccountNode;
             if (accountNode != null) return new AccountNode[] { accountNode };
+
+            var containerNode = CurrentContainer;
+            if (containerNode != null) return new AccountNode[] { containerNode.Parent as AccountNode };
 
             return tvwObjects.Nodes[0].Nodes.OfType<AccountNode>();
         }
@@ -440,6 +451,6 @@ namespace BlobManager.App
         public ContainerNode CurrentContainer
         {
             get { return tvwObjects.SelectedNode as ContainerNode; }
-        }
+        }        
     }
 }

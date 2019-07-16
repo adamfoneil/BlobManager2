@@ -7,8 +7,8 @@ namespace BlobManager.App.Classes
 {
     public class BlobItem : ListViewItem
     {
-        public BlobItem(CloudBlockBlob blob, ImageList imageList) : base(Path.GetFileName(blob.Name))
-        {
+        public BlobItem(CloudBlockBlob blob, ImageList imageList, bool showPath = false) : base((showPath) ? blob.Name : Path.GetFileName(blob.Name))
+        {            
             Blob = blob;
             ImageKey = FileSystem.AddIcon(imageList, blob.Name, FileSystem.IconSize.Small);
             SubItems.AddRange(new ListViewSubItem[]

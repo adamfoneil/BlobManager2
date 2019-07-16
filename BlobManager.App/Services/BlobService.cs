@@ -41,44 +41,65 @@ namespace BlobManager.App.Services
             return results;
         }
 
-        public async Task<BlobListing> ListBlobsAsync(string containerName, string prefix = null)
+        private async Task<IEnumerable<T>> ListItemsAsync<T>(string containerName, string prefix = null)
         {
             CloudBlobClient client = GetClient();
             var container = client.GetContainerReference(containerName);
 
             BlobContinuationToken token = null;
-            var blobs = new List<CloudBlockBlob>();
-            var folders = new List<CloudBlobDirectory>();
+            var results = new List<T>();
+
             do
             {
                 var response = await container.ListBlobsSegmentedAsync(prefix, token);
                 token = response.ContinuationToken;
-                blobs.AddRange(response.Results.OfType<CloudBlockBlob>());
-                folders.AddRange(response.Results.OfType<CloudBlobDirectory>());
+                results.AddRange(response.Results.OfType<T>());
             } while (token != null);
 
-            return new BlobListing() { Blobs = blobs, Folders = folders };
+            return results;
         }
 
-        public async Task<IEnumerable<CloudBlockBlob>> SearchBlobsAsync(string containerName, string prefix)
+        public async Task<BlobListing> ListBlobsAndDirectoriesAsync(string containerName, string prefix = null)
+        {
+            return new BlobListing()
+            {
+                Blobs = await ListBlobsAsync(containerName, prefix),
+                Directories = await ListDirectoriesAsync(containerName, prefix)
+            };
+        }
+
+        public async Task<IEnumerable<CloudBlobDirectory>> ListDirectoriesAsync(string containerName, string prefix = null)
+        {
+            return await ListItemsAsync<CloudBlobDirectory>(containerName, prefix);
+        }
+
+        public async Task<IEnumerable<CloudBlockBlob>> ListBlobsAsync(string containerName, string prefix = null)
+        {
+            return await ListItemsAsync<CloudBlockBlob>(containerName, prefix);
+        }
+
+        public async Task<IEnumerable<CloudBlockBlob>> SearchBlobsAsync(string containerName, string prefix, IProgress<SearchProgress> progress)
         {
             if (string.IsNullOrEmpty(prefix)) throw new ArgumentNullException(nameof(prefix));
 
             List<CloudBlockBlob> results = new List<CloudBlockBlob>();
 
-            await SearchBlobsInnerAsyncR(results, containerName, prefix);
+            await SearchBlobsInnerAsyncR(results, containerName, string.Empty, prefix, progress);
 
             return results;
         }
 
-        private async Task SearchBlobsInnerAsyncR(List<CloudBlockBlob> results, string containerName, string prefix)
+        private async Task SearchBlobsInnerAsyncR(List<CloudBlockBlob> results, string containerName, string directoryName, string prefix, IProgress<SearchProgress> progress)
         {
-            var listing = await ListBlobsAsync(containerName, prefix);
-            results.AddRange(listing.Blobs);
+            progress?.Report(new SearchProgress() { Path = directoryName, ContainerName = containerName, AccountName = _accountName });
 
-            foreach (var folder in listing.Folders)
+            var blobs = await ListBlobsAsync(containerName, directoryName + prefix);
+            results.AddRange(blobs);
+
+            var folders = await ListDirectoriesAsync(containerName, directoryName);
+            foreach (var folder in folders)
             {
-                await SearchBlobsInnerAsyncR(results, containerName, folder.Prefix + prefix);
+                await SearchBlobsInnerAsyncR(results, containerName, folder.Prefix, prefix, progress);
             }
         }
 
@@ -109,7 +130,14 @@ namespace BlobManager.App.Services
         public class BlobListing
         {
             public IEnumerable<CloudBlockBlob> Blobs { get; set; }
-            public IEnumerable<CloudBlobDirectory> Folders { get; set; }
+            public IEnumerable<CloudBlobDirectory> Directories { get; set; }
+        }
+
+        public class SearchProgress
+        {
+            public string AccountName { get; set; }
+            public string ContainerName { get; set; }
+            public string Path { get; set; }
         }
     }
 }
