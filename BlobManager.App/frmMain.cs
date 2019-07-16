@@ -178,20 +178,25 @@ namespace BlobManager.App
                 var accountNode = e.Node as AccountNode;
                 if (!accountNode?.HasContainers() ?? false)
                 {
-                    await DoActionAsync(tslAccountStatus, "Loading containers...", async () =>
-                    {
-                        var service = new BlobService(accountNode.Account.Name, accountNode.Account.Key);
-                        var containers = await service.ListContainersAsync();
-                        tvwObjects.BeginUpdate();
-                        accountNode.LoadContainers(containers);
-                        tvwObjects.EndUpdate();
-                    });                                        
+                    await LoadContainersAsync(accountNode);
                 }
             }
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message);            
             }
+        }
+
+        private async Task LoadContainersAsync(AccountNode accountNode)
+        {
+            await DoActionAsync(tslAccountStatus, "Loading containers...", async () =>
+            {
+                var service = new BlobService(accountNode.Account.Name, accountNode.Account.Key);
+                var containers = await service.ListContainersAsync();
+                tvwObjects.BeginUpdate();
+                accountNode.LoadContainers(containers);
+                tvwObjects.EndUpdate();
+            });
         }
 
         private async void TvwObjects_AfterSelect(object sender, TreeViewEventArgs e)
@@ -212,6 +217,8 @@ namespace BlobManager.App
 
         private async Task LoadBlobListViewAsync(ContainerNode containerNode, string directory = null)
         {
+            if (containerNode == null) throw new NullReferenceException("No container selected.");
+
             var accountNode = containerNode.Parent as AccountNode;
 
             _breadcrumb.Clear();
@@ -362,6 +369,77 @@ namespace BlobManager.App
             {
                 //Clipboard.SetDataObject()
             }            
+        }
+
+        private async void TbSearchBlobs_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                string searchText = tbSearchBlobs.Text;
+                if (e.KeyCode == Keys.Enter)
+                {
+                    if (!string.IsNullOrEmpty(searchText))
+                    {
+                        lvBlobs.Items.Clear();
+                        var accountNodes = GetAccountNodes();
+                        foreach (var accountNode in accountNodes)
+                        {
+                            var service = new BlobService(accountNode.Account.Name, accountNode.Account.Key);
+                            var containers = await GetContainersAsync(accountNode);                            
+                            foreach (var container in containers)
+                            {
+                                tslBlobStatus.Text = $"Searching {accountNode.Name}.{container}...";
+                                lvBlobs.BeginUpdate();
+                                var results = await service.SearchBlobsAsync(container, searchText);
+                                lvBlobs.Items.AddRange(results.Select(blob => new BlobItem(blob, imlSmallIcons)).ToArray());
+                                lvBlobs.EndUpdate();
+                                tslBlobStatus.Text = $"{lvBlobs.Items.Count:n0} blobs";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        await LoadBlobListViewAsync(CurrentContainer);
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+        }
+
+        private IEnumerable<AccountNode> GetAccountNodes()
+        {
+            var accountNode = tvwObjects.SelectedNode as AccountNode;
+            if (accountNode != null) return new AccountNode[] { accountNode };
+
+            return tvwObjects.Nodes[0].Nodes.OfType<AccountNode>();
+        }
+
+        private async Task<IEnumerable<string>> GetContainersAsync(AccountNode accountNode)
+        {            
+            if (!accountNode.HasContainers()) await LoadContainersAsync(accountNode);
+            return accountNode.Nodes.OfType<ContainerNode>().Select(node => node.Name);            
+        }
+
+        public Options.StorageAccount CurrentAccount
+        {
+            get
+            {
+                var containerNode = tvwObjects.SelectedNode as ContainerNode;
+                if (containerNode != null) return (containerNode.Parent as AccountNode).Account;
+
+                var accountNode = tvwObjects.SelectedNode as AccountNode;
+                if (accountNode != null) return accountNode.Account;
+
+                throw new NullReferenceException("No current account selected.");
+            }
+        }
+
+        public ContainerNode CurrentContainer
+        {
+            get { return tvwObjects.SelectedNode as ContainerNode; }
         }
     }
 }

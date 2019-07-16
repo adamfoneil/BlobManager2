@@ -1,6 +1,7 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -57,6 +58,28 @@ namespace BlobManager.App.Services
             } while (token != null);
 
             return new BlobListing() { Blobs = blobs, Folders = folders };
+        }
+
+        public async Task<IEnumerable<CloudBlockBlob>> SearchBlobsAsync(string containerName, string prefix)
+        {
+            if (string.IsNullOrEmpty(prefix)) throw new ArgumentNullException(nameof(prefix));
+
+            List<CloudBlockBlob> results = new List<CloudBlockBlob>();
+
+            await SearchBlobsInnerAsyncR(results, containerName, prefix);
+
+            return results;
+        }
+
+        private async Task SearchBlobsInnerAsyncR(List<CloudBlockBlob> results, string containerName, string prefix)
+        {
+            var listing = await ListBlobsAsync(containerName, prefix);
+            results.AddRange(listing.Blobs);
+
+            foreach (var folder in listing.Folders)
+            {
+                await SearchBlobsInnerAsyncR(results, containerName, folder.Prefix + prefix);
+            }
         }
 
         private CloudBlobClient GetClient()

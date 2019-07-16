@@ -241,6 +241,7 @@
             this.tbSearchBlobs.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.tbSearchBlobs.Name = "tbSearchBlobs";
             this.tbSearchBlobs.Size = new System.Drawing.Size(120, 25);
+            this.tbSearchBlobs.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TbSearchBlobs_KeyDown);            
             // 
             // toolStripLabel1
             // 
