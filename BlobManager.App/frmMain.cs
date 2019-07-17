@@ -1,5 +1,6 @@
 ﻿using BlobManager.App.Classes;
 using BlobManager.App.Controls;
+using BlobManager.App.Interfaces;
 using BlobManager.App.Models;
 using BlobManager.App.Services;
 using BlobManager.App.WinForms;
@@ -177,15 +178,42 @@ namespace BlobManager.App
             try
             {
                 var accountNode = e.Node as AccountNode;
-                if (!accountNode?.HasContainers() ?? false)
+                if (!accountNode?.HasChildren() ?? false)
                 {
                     await LoadContainersAsync(accountNode);
+                }
+
+                var containerNode = e.Node as ContainerNode;
+                if (!containerNode?.HasChildren() ?? false)
+                {
+                    await LoadFoldersAsync(containerNode);
+                }
+
+                var folderNode = e.Node as FolderNode;
+                if (!folderNode?.HasChildren() ?? false)
+                {
+                    await LoadFoldersAsync(folderNode);
                 }
             }
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message);            
             }
+        }
+
+        private async Task LoadFoldersAsync<T>(T folderNode) where T : TreeNode, IFolderNode
+        {
+            await DoActionAsync(tslAccountStatus, "Finding directories...", async () =>
+            {
+                var account = CurrentAccount;
+                string container = CurrentContainer.Name;
+                var service = new BlobService(account.Name, account.Key);
+                var folders = await service.ListDirectoriesAsync(container, folderNode.Prefix);
+                tvwObjects.BeginUpdate();
+                IFolderHelper.RemovePlaceholder(folderNode);
+                foreach (var dir in folders) folderNode.Nodes.Add(new FolderNode(dir));
+                tvwObjects.EndUpdate();
+            });
         }
 
         private async Task LoadContainersAsync(AccountNode accountNode)
@@ -195,7 +223,7 @@ namespace BlobManager.App
                 var service = new BlobService(accountNode.Account.Name, accountNode.Account.Key);
                 var containers = await service.ListContainersAsync();
                 tvwObjects.BeginUpdate();
-                accountNode.LoadContainers(containers);
+                accountNode.LoadChildren(containers);
                 tvwObjects.EndUpdate();
             });
         }
@@ -282,7 +310,7 @@ namespace BlobManager.App
                                     var accountNode = new AccountNode(acc);
                                     root.Nodes.Add(accountNode);
                                     tvwObjects.BeginUpdate();
-                                    accountNode.LoadContainers(containers);
+                                    accountNode.LoadChildren(containers);
                                     tvwObjects.EndUpdate();
                                     accountNode.Expand();
                                 }
@@ -430,7 +458,7 @@ namespace BlobManager.App
 
         private async Task<IEnumerable<string>> GetContainersAsync(AccountNode accountNode)
         {            
-            if (!accountNode.HasContainers()) await LoadContainersAsync(accountNode);
+            if (!accountNode.HasChildren()) await LoadContainersAsync(accountNode);
             return accountNode.Nodes.OfType<ContainerNode>().Select(node => node.Name);            
         }
 
@@ -444,13 +472,39 @@ namespace BlobManager.App
                 var accountNode = tvwObjects.SelectedNode as AccountNode;
                 if (accountNode != null) return accountNode.Account;
 
+                var folderNode = tvwObjects.SelectedNode as FolderNode;
+                if (folderNode != null) return FindParentNode<AccountNode>(folderNode).Account;
+
                 throw new NullReferenceException("No current account selected.");
             }
         }
 
+        private T FindParentNode<T>(TreeNode node) where T : TreeNode
+        {
+            TreeNode result = node.Parent;
+
+            var check = result as T;
+            while (check == null)
+            {
+                result = result.Parent;
+                check = result as T;
+            }
+
+            return check;
+        }
+
         public ContainerNode CurrentContainer
         {
-            get { return tvwObjects.SelectedNode as ContainerNode; }
+            get
+            {
+                var node = tvwObjects.SelectedNode as ContainerNode;
+                if (node != null) return node;
+
+                var folderNode = tvwObjects.SelectedNode as FolderNode;
+                if (folderNode != null) return FindParentNode<ContainerNode>(folderNode);
+                
+                throw new NullReferenceException("No current container selected.");
+            }
         }        
     }
 }

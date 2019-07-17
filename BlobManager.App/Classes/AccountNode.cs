@@ -6,7 +6,7 @@ using static BlobManager.App.Models.Options;
 
 namespace BlobManager.App.Classes
 {
-    public class AccountNode : TreeNode, IBreadcrumbItem
+    public class AccountNode : TreeNode, IBreadcrumbItem, IFolderNode
     {
         public AccountNode(StorageAccount account) : base(account.Name, new PlaceholderNode[] { new PlaceholderNode() })
         {
@@ -19,42 +19,30 @@ namespace BlobManager.App.Classes
 
         public StorageAccount Account { get; }
 
+        public string Prefix => throw new NotImplementedException();
+
         public string GetBreadcrumbText()
         {
             return Name;
         }
 
-        public bool HasContainers()
+        public bool HasChildren()
         {
             try
             {
                 var containerNode = Nodes[0] as ContainerNode;
                 return (containerNode != null);
             }
-            catch 
+            catch
             {
                 return false;
             }
-            
         }
 
-        public void LoadContainers(IEnumerable<string> containers)
+        public void LoadChildren(IEnumerable<string> children)
         {
-            RemovePlaceholder();            
-            foreach (string name in containers) Nodes.Add(new ContainerNode(name));
-        }
-
-        private void RemovePlaceholder()
-        {
-            try
-            {
-                var placeholder = Nodes[0] as PlaceholderNode;
-                if (placeholder != null) Nodes.Remove(placeholder);
-            }
-            catch 
-            {
-                // do nothing
-            }
-        }
+            IFolderHelper.RemovePlaceholder(this);
+            foreach (var child in children) Nodes.Add(new ContainerNode(child));
+        }        
     }
 }

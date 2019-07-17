@@ -52,6 +52,7 @@
     <Compile Include="Classes\ContainerNode.cs" />
     <Compile Include="Classes\FileDropManager.cs" />
     <Compile Include="Classes\FolderItem.cs" />
+    <Compile Include="Classes\FolderNode.cs" />
     <Compile Include="Classes\ListViewColumnSizer.cs" />
     <Compile Include="Classes\PlaceholderNode.cs" />
     <Compile Include="Controls\ToolStripBreadcrumb.cs" />
@@ -68,6 +69,7 @@
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IBreadcrumbItem.cs" />
+    <Compile Include="Interfaces\IFolderNode.cs" />
     <Compile Include="Models\Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
